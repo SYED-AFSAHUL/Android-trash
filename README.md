@@ -1,0 +1,2 @@
+# Android-trash
+Example codes

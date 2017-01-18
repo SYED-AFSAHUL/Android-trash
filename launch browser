@@ -1,0 +1,11 @@
+public class send_message extends AppCompatActivity{
+    MainActivity mainActivity;
+    
+    send_message(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+
+        Uri uri = Uri.parse("https://www.google.co.in/?gfe_rd=cr&ei=ead_WIeWNpPy8Afe4b_YBA");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        mainActivity.startActivity(intent);
+    }
+}

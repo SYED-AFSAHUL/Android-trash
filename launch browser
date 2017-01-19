@@ -1,4 +1,4 @@
-public class send_message extends AppCompatActivity{
+public class send_message {
     MainActivity mainActivity;
     
     send_message(MainActivity mainActivity) {

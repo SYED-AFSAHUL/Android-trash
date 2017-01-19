@@ -1,0 +1,17 @@
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        WebView webView = (WebView)findViewById(R.id.webView1);  //necessary line-1
+       
+        webView.setWebViewClient(new WebViewClient());   //the page will laod without it too,
+                                                         //used to not launch browser when any action is performed in webView.
+        webView.getSettings().setJavaScriptEnabled(true);   //the page will laod without it too,
+                                                            //used for loading javascript version of the page
+       
+        webView.loadUrl("https://www.google.co.in/webhp?hl=en&sa=X&ved=0ahUKEwiPmPnG-c3RAhURT48KHRmAAm0QPAgD"); necessary line -2
+    }
+}

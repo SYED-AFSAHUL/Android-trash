@@ -1,0 +1,6 @@
+//to launch a new activity from a given activity
+
+startActivity(new Intent(PresentActivity.this, ActivityToBeLaunched.class));
+       or
+Intent i = new Intent(PresentActivity.this, ActivityToBeLaunched.class);
+startActivity(i);

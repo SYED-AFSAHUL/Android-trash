@@ -1,0 +1,12 @@
+try {
+    Uri myUri = Uri.parse("/storage/emulated/0/Pictures/wifip2pshared-1495867711223.mp3"); // initialize Uri here
+    MediaPlayer mediaPlayer = new MediaPlayer();
+    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    mediaPlayer.setDataSource(getApplicationContext(), myUri);
+    Log.d(TAG,"1111");
+    mediaPlayer.prepare();
+    Log.d(TAG,"222222");
+    mediaPlayer.start();
+}catch(Exception e){
+    e.printStackTrace();
+}

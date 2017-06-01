@@ -1,0 +1,138 @@
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+public class MainActivity extends Activity {
+
+    String TAG = "sMess";
+    ListView listView;
+
+    String audioList[];
+    String audioLocation[];
+    int i=0;
+
+    MediaPlayer mediaPlayer = new MediaPlayer();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ContentResolver cr = this.getContentResolver();
+
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
+        String[] projection = {
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION
+        };
+        Cursor cur = cr.query(uri, projection, selection, null, sortOrder);
+        int count;
+        try {
+            if (cur != null) {
+                count = cur.getCount();
+                audioList = new String[count];
+                audioLocation = new String[count];
+                if (count > 0) {
+                    cur.moveToNext();
+                    do {
+                        Log.d(TAG, "\n*****TRACK****" + i);
+                        //String data = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        Log.d(TAG, "data -:" + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA)));
+                        Log.d(TAG, "id -:" + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media._ID)));
+                        Log.d(TAG, "title -:" + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+                        Log.d(TAG, "display -:" + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
+
+                        // Add code to get more column here
+                        audioList[i] = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                        audioLocation[i++] = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        // Save to your list here
+
+                    } while (cur.moveToNext());
+
+                }
+            }
+            if(cur!=null)
+                cur.close();
+
+        }catch(Exception e){
+            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
+        }
+        try {
+            ArrayAdapter adapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1,
+                    android.R.id.text1, audioList);
+            listView = (ListView) findViewById(R.id.myList);
+            listView.setAdapter(adapter);
+
+            // ListView Item Click Listener
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String itemValue = (String)listView.getItemAtPosition(position);
+
+                    Toast.makeText(getApplication(), "position - " + position
+                            + " item " +itemValue, Toast.LENGTH_SHORT).show();
+                    playMusic(position);
+
+                }
+
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void playMusic(int pos){
+        try {
+            mediaPlayer.reset();
+            Uri myUri = Uri.parse(audioLocation[pos]);
+
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(getApplicationContext(), myUri);
+            Log.d(TAG,"1111");
+            mediaPlayer.prepare();
+            Log.d(TAG,"222222");
+
+            mediaPlayer.start();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        audioList = null;
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        mediaPlayer=null;
+        audioList = null;
+        audioLocation  = null;
+
+    }
+}

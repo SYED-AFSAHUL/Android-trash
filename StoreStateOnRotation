@@ -1,0 +1,93 @@
+/*
+ * on rotation- first onSaveInstanceState is called, then avtivity is destroyed,
+ *              then oncreate is callec to create a new activity, it is exited and then 
+ *              onRestoreInstanceState is called in which we can manually restore state.
+ */
+ 
+ package com.example.afsahulsyed.trash_test;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    private final String TAG = "sMess";
+    TextView tv1;
+    TextView tv2;
+    EditText et1;
+    Button b1;
+    String tv1Text;
+    String tv2Text;
+    String et1Text;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Log.d(TAG,"inside onCreate");
+        tv1 = (TextView)findViewById(R.id.textView1);
+        tv2 = (TextView)findViewById(R.id.textView2);
+        et1 = (EditText)findViewById(R.id.editText);
+        b1 = (Button)findViewById(R.id.button);
+        //tv1.setText(savedInstanceState.get("text").toString());
+
+        tv1.setText(tv1Text);
+        tv2.setText(tv2Text);
+        et1.setText(et1Text);
+
+        b1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"button clicked");
+                tv1.setText("dfsdffsfsdf");
+                tv2.setText(et1.getText());
+            }
+        });
+        Log.d(TAG,"exiting onCreate");
+    }
+
+    //Use onSaveInstanceState(Bundle) and onRestoreInstanceState
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        Log.d(TAG,"onSaveInstanceState");
+        savedInstanceState.putString("tv1", tv1.getText().toString());
+        savedInstanceState.putString("tv2",tv2.getText().toString());
+        savedInstanceState.putString("et", et1.getText().toString());
+        //savedInstanceState.putString("MyString", "Welcome back to Android");
+        Log.d(TAG,et1.getText().toString());
+        // etc.
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+//onRestoreInstanceState
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restore UI state from the savedInstanceState.
+        // This bundle has also been passed to onCreate.
+        Log.d(TAG,"onRestoreInstanceState");
+        tv1Text = savedInstanceState.getString("tv1");
+        tv2Text = savedInstanceState.getString("tv2");
+        et1Text = savedInstanceState.getString("et");
+        Log.d(TAG,tv1Text+"?????"+tv2Text+"????"+et1Text);
+        Log.d(TAG,"exiting onRestoreInstanceState");
+        tv1.setText(tv1Text);
+        tv2.setText(tv2Text);
+        et1.setText(et1Text);
+    }
+}
